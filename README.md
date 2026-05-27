@@ -1,4 +1,6 @@
-# AI-Powered Ultrasound Video Analysis
+# Mammaus
+
+## AI-Powered Ultrasound Video Analysis
 
 ![Python](https://img.shields.io/badge/python-≥3.10-blue)
 ![License](https://img.shields.io/badge/license-Apache%202.0-green)
