@@ -69,7 +69,7 @@ Pipeline Overview:
 ## Installation
 Clone the project, then
 ```bash
-cd mamma_us
+cd mammaus
 pip install -e ".[dev]"
 ```
 
