@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mammaus"
+version = "1.0.0"
+description = "AI-powered ultrasound video analysis pipeline"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    {name = "Thibault Escobar"},
+]
+keywords = ["ultrasound", "deep-learning", "medical-imaging", "classification", "ViT"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "pydicom",
+    "Pillow",
+    "torch",
+    "transformers",
+]
+
+[project.scripts]
+mammaus-preprocess = "mammaus.preprocess:preprocess_cli"
+mammaus-predict = "mammaus.predict:predict_cli"
+mammaus-report = "mammaus.reporting:report_global_cli"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=mammaus --cov-report=term-missing"
+
+[tool.coverage.run]
+omit = ["mammaus/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__",
+    "pragma: no cover",
+]
+
+[tool.setuptools.packages.find]
+include = ["mammaus*"]
