@@ -6,7 +6,8 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from mammaus.predict import MODEL_ID, predict_cli
+from mammaus.constants import MODEL_ID
+from mammaus.predict import predict_cli
 
 
 @pytest.fixture()

@@ -1,6 +1,6 @@
 # Mammaus
 
-## AI-Powered Ultrasound Video Analysis
+## AI-Powered Ultrasound Video Analysis With Vision Transformers
 
 ![Python](https://img.shields.io/badge/python-≥3.10-blue)
 ![License](https://img.shields.io/badge/license-Apache%202.0-green)
@@ -157,7 +157,9 @@ python -m pytest tests/ -v
 
 
 ## Adapting to Other Applications
-Replace the AI model (ViT, ResNet, etc.) in `predict.py` and MODEL.txt
+This pipeline is model-agnostic. To adapt it to a different classification task:
+1. Update `constants.py`: change `MODEL_ID`, `LABELS`, `LABEL_COLORS`, and `LABEL_EN` to match the new model and classes
+2. Update `MODEL.txt` with the new model card
 
 
 ## Provided Example: Breast Ultrasound
