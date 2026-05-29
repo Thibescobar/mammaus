@@ -1,0 +1,54 @@
+════════════════════════════════════════════════════════════
+  1_LSUP  —  Left breast — Superior
+  347 frames analyzed
+════════════════════════════════════════════════════════════
+
+SUMMARY
+------
+The model analyzed each frame of this acquisition and
+assigned a confidence score for 3 categories:
+  • Benign    = non-cancerous appearance
+  • Malignant = suspicious/cancerous appearance
+  • Normal    = no visible abnormality
+
+RESULT BY CATEGORY
+------------------
+                Benign :  289 / 347 frames ( 83.3%)  █████████████████████████████████████████
+  Malignant (suspicious) :    1 / 347 frames (  0.3%)  
+                Normal :   57 / 347 frames ( 16.4%)  ████████
+
+MODEL MEAN CONFIDENCE
+---------------------
+  (For each frame, the model gives a confidence %
+   for each category. Below: the mean over all frames, as well as min/max values.)
+                Benign :  63.5%  [min 17.5% — max 96.6%]
+  Malignant (suspicious) :  11.3%  [min 1.5% — max 39.4%]
+                Normal :  25.2%  [min 1.9% — max 79.0%]
+
+⚠  SUSPICIOUS FRAMES (malignancy)
+----------------------------------
+  Frames classified as MALIGNANT (dominant category):
+    → frame_323.png  (malignant confidence: 39.4%)
+  Frames with malignant score ≥ 30% (not dominant but notable):
+    → frame_118.png  (malignant confidence: 36.3%)
+    → frame_245.png  (malignant confidence: 32.2%)
+    → frame_319.png  (malignant confidence: 32.9%)
+    → frame_324.png  (malignant confidence: 31.4%)
+    → frame_325.png  (malignant confidence: 31.4%)
+
+GENERAL ASSESSMENT (automatic heuristic)
+----------------------------------------
+  Method: the model may misclassify an isolated frame.
+  In ultrasound, a true lesion appears on several consecutive
+  frames as the probe sweeps a continuous area. Thus, a sequence
+  of ≥ 3 consecutive malignant frames is considered significant, while
+  isolated malignant frames are likely model misclassifications.
+
+  ✓  RESULT: OVERALL REASSURING
+  1 frame(s) classified as malignant but isolated,
+  without a consecutive sequence ≥ 3 — likely model outliers.
+
+════════════════════════════════════════════════════════════
+  This result is provided for information only.
+  It does not replace a radiologist's opinion in any way.
+════════════════════════════════════════════════════════════

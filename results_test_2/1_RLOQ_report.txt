@@ -1,0 +1,50 @@
+════════════════════════════════════════════════════════════
+  1_RLOQ  —  Right breast — Lower Outer Quadrant
+  346 frames analyzed
+════════════════════════════════════════════════════════════
+
+SUMMARY
+------
+The model analyzed each frame of this acquisition and
+assigned a confidence score for 3 categories:
+  • Benign    = non-cancerous appearance
+  • Malignant = suspicious/cancerous appearance
+  • Normal    = no visible abnormality
+
+RESULT BY CATEGORY
+------------------
+                Benign :  216 / 346 frames ( 62.4%)  ███████████████████████████████
+  Malignant (suspicious) :    0 / 346 frames (  0.0%)  
+                Normal :  130 / 346 frames ( 37.6%)  ██████████████████
+
+MODEL MEAN CONFIDENCE
+---------------------
+  (For each frame, the model gives a confidence %
+   for each category. Below: the mean over all frames, as well as min/max values.)
+                Benign :  53.4%  [min 11.8% — max 89.9%]
+  Malignant (suspicious) :  10.0%  [min 2.2% — max 39.0%]
+                Normal :  36.6%  [min 3.6% — max 84.9%]
+
+⚠  SUSPICIOUS FRAMES (malignancy)
+----------------------------------
+  Frames with malignant score ≥ 30% (not dominant but notable):
+    → frame_040.png  (malignant confidence: 30.3%)
+    → frame_045.png  (malignant confidence: 34.0%)
+    → frame_064.png  (malignant confidence: 36.8%)
+    → frame_067.png  (malignant confidence: 39.0%)
+
+GENERAL ASSESSMENT (automatic heuristic)
+----------------------------------------
+  Method: the model may misclassify an isolated frame.
+  In ultrasound, a true lesion appears on several consecutive
+  frames as the probe sweeps a continuous area. Thus, a sequence
+  of ≥ 3 consecutive malignant frames is considered significant, while
+  isolated malignant frames are likely model misclassifications.
+
+  ✓  RESULT: OVERALL REASSURING
+  No frame classified as malignant.
+
+════════════════════════════════════════════════════════════
+  This result is provided for information only.
+  It does not replace a radiologist's opinion in any way.
+════════════════════════════════════════════════════════════

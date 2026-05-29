@@ -9,12 +9,10 @@ from pathlib import Path
 import numpy as np
 from transformers import pipeline
 
-from mammaus.constants import LABELS
+from mammaus.constants import LABELS, MODEL_ID
 from mammaus.reporting import make_acquisition_figure, print_acquisition_report
 
 logging.getLogger("transformers.pipelines.base").setLevel(logging.ERROR)
-
-MODEL_ID = "hugging-science/breast-cancer-detector-2"
 
 
 def predict_cli() -> None:
