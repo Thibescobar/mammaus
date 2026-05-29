@@ -1,5 +1,7 @@
 """Clinical reporting: figures, statistics, and text reports."""
 
+from pathlib import Path
+
 import matplotlib
 import numpy as np
 
@@ -66,7 +68,7 @@ def find_consecutive_malignant_runs(scores: dict, min_run: int = 3) -> list[tupl
     return runs
 
 
-def generate_global_text_report(all_stats: dict, results_dir, n_acq: int, n_frames: int) -> None:
+def generate_global_text_report(all_stats: dict, results_dir: Path, n_acq: int, n_frames: int) -> None:
     """Generate and save a global text report summarizing all acquisitions."""
     n_to_check = sum(1 for s in all_stats.values() if s["to_check"])
     reassuring = n_to_check == 0
@@ -177,7 +179,7 @@ def compute_stats(scores: dict, min_run: int = 3) -> dict:
         "to_check": len(runs) > 0,
     }
 
-def make_acquisition_figure(acq_name: str, scores: dict, out_dir):
+def make_acquisition_figure(acq_name: str, scores: dict, out_dir: Path):
     """Generate and save a per-acquisition confidence plot with color bar."""
     n_frames = len(scores["benign"])
     frames = np.arange(n_frames)
@@ -229,7 +231,7 @@ def make_acquisition_figure(acq_name: str, scores: dict, out_dir):
     plt.close(fig)
     return fig_path
 
-def print_acquisition_report(acq_name: str, scores: dict, out_dir) -> None:
+def print_acquisition_report(acq_name: str, scores: dict, out_dir: Path) -> None:
     """Generate and save a detailed text report for a single acquisition."""
     n_frames = len(scores["benign"])
     benign = np.array(scores["benign"])
@@ -326,7 +328,7 @@ def print_acquisition_report(acq_name: str, scores: dict, out_dir) -> None:
     print(f"  Report saved: {report_path}")
 
 
-def make_global_figure(all_data: dict, all_stats: dict, out_dir):
+def make_global_figure(all_data: dict, all_stats: dict, out_dir: Path):
     """Generate and save a global summary figure (bar charts + table)."""
     acq_names = list(all_data.keys())
     n_acq = len(acq_names)
@@ -422,6 +424,7 @@ def make_global_figure(all_data: dict, all_stats: dict, out_dir):
 def report_global_cli() -> None:
     """CLI entry point: generate global multi-acquisition report from saved scores."""
     import argparse
+    import sys
     from pathlib import Path
 
     parser = argparse.ArgumentParser(description="Generate global multi-acquisition report")
@@ -432,12 +435,12 @@ def report_global_cli() -> None:
     scores_dir = results_dir / "scores"
     if not scores_dir.exists():
         print(f"No scores folder found at: {scores_dir}")
-        return
+        sys.exit(1)
 
     npz_files = sorted(scores_dir.glob("*_scores.npz"))
     if not npz_files:
         print(f"No score files found in: {scores_dir}")
-        return
+        sys.exit(1)
 
     all_data = {}
     all_stats = {}

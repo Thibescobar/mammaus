@@ -1,0 +1,93 @@
+════════════════════════════════════════════════════════════
+  1_RLAT  —  Right breast — Lateral
+  347 frames analyzed
+════════════════════════════════════════════════════════════
+
+SUMMARY
+------
+The model analyzed each frame of this acquisition and
+assigned a confidence score for 3 categories:
+  • Benign    = non-cancerous appearance
+  • Malignant = suspicious/cancerous appearance
+  • Normal    = no visible abnormality
+
+RESULT BY CATEGORY
+------------------
+                Benign :  225 / 347 frames ( 64.8%)  ████████████████████████████████
+  Malignant (suspicious) :   21 / 347 frames (  6.1%)  ███
+                Normal :  101 / 347 frames ( 29.1%)  ██████████████
+
+MODEL MEAN CONFIDENCE
+---------------------
+  (For each frame, the model gives a confidence %
+   for each category. Below: the mean over all frames, as well as min/max values.)
+                Benign :  54.2%  [min 15.9% — max 93.5%]
+  Malignant (suspicious) :  14.7%  [min 2.5% — max 70.3%]
+                Normal :  31.1%  [min 2.9% — max 78.4%]
+
+⚠  SUSPICIOUS FRAMES (malignancy)
+----------------------------------
+  Frames classified as MALIGNANT (dominant category):
+    → frame_288.png  (malignant confidence: 52.7%)
+    → frame_289.png  (malignant confidence: 70.3%)
+    → frame_318.png  (malignant confidence: 50.9%)
+    → frame_319.png  (malignant confidence: 61.0%)
+    → frame_320.png  (malignant confidence: 59.3%)
+    → frame_321.png  (malignant confidence: 59.1%)
+    → frame_322.png  (malignant confidence: 45.7%)
+    → frame_323.png  (malignant confidence: 45.2%)
+    → frame_324.png  (malignant confidence: 47.6%)
+    → frame_325.png  (malignant confidence: 58.8%)
+    → frame_326.png  (malignant confidence: 45.7%)
+    → frame_327.png  (malignant confidence: 51.6%)
+    → frame_328.png  (malignant confidence: 49.1%)
+    → frame_329.png  (malignant confidence: 49.0%)
+    → frame_330.png  (malignant confidence: 48.3%)
+    → frame_331.png  (malignant confidence: 52.1%)
+    → frame_332.png  (malignant confidence: 57.8%)
+    → frame_339.png  (malignant confidence: 48.1%)
+    → frame_340.png  (malignant confidence: 46.1%)
+    → frame_342.png  (malignant confidence: 48.9%)
+    → frame_343.png  (malignant confidence: 46.0%)
+  Frames with malignant score ≥ 30% (not dominant but notable):
+    → frame_226.png  (malignant confidence: 31.6%)
+    → frame_227.png  (malignant confidence: 41.9%)
+    → frame_270.png  (malignant confidence: 43.6%)
+    → frame_274.png  (malignant confidence: 43.9%)
+    → frame_287.png  (malignant confidence: 30.6%)
+    → frame_293.png  (malignant confidence: 30.6%)
+    → frame_301.png  (malignant confidence: 35.6%)
+    → frame_304.png  (malignant confidence: 33.3%)
+    → frame_305.png  (malignant confidence: 40.9%)
+    → frame_311.png  (malignant confidence: 32.0%)
+    → frame_312.png  (malignant confidence: 32.7%)
+    → frame_314.png  (malignant confidence: 34.4%)
+    → frame_315.png  (malignant confidence: 36.1%)
+    → frame_317.png  (malignant confidence: 37.4%)
+    → frame_333.png  (malignant confidence: 47.5%)
+    → frame_334.png  (malignant confidence: 34.4%)
+    → frame_335.png  (malignant confidence: 39.0%)
+    → frame_336.png  (malignant confidence: 41.8%)
+    → frame_337.png  (malignant confidence: 39.3%)
+    → frame_338.png  (malignant confidence: 41.3%)
+    → frame_341.png  (malignant confidence: 42.1%)
+    → frame_344.png  (malignant confidence: 41.1%)
+    → frame_345.png  (malignant confidence: 37.7%)
+    → frame_346.png  (malignant confidence: 38.5%)
+
+GENERAL ASSESSMENT (automatic heuristic)
+----------------------------------------
+  Method: the model may misclassify an isolated frame.
+  In ultrasound, a true lesion appears on several consecutive
+  frames as the probe sweeps a continuous area. Thus, a sequence
+  of ≥ 3 consecutive malignant frames is considered significant, while
+  isolated malignant frames are likely model misclassifications.
+
+  ⚠  RESULT: TO CHECK
+  1 sequence(s) of consecutive malignant frames detected:
+    → frames 318 to 332  (15 consecutive frames)
+
+════════════════════════════════════════════════════════════
+  This result is provided for information only.
+  It does not replace a radiologist's opinion in any way.
+════════════════════════════════════════════════════════════
