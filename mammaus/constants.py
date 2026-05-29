@@ -1,5 +1,7 @@
 # Common constants and mappings for mammaus
 
+MODEL_ID = "hugging-science/breast-cancer-detector-2"
+
 LABELS = {
     "0": "benign",
     "1": "malignant",

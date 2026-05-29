@@ -1,0 +1,114 @@
+════════════════════════════════════════════════════════════
+  1_LLOQ  —  Left breast — Lower Outer Quadrant
+  347 frames analyzed
+════════════════════════════════════════════════════════════
+
+SUMMARY
+------
+The model analyzed each frame of this acquisition and
+assigned a confidence score for 3 categories:
+  • Benign    = non-cancerous appearance
+  • Malignant = suspicious/cancerous appearance
+  • Normal    = no visible abnormality
+
+RESULT BY CATEGORY
+------------------
+                Benign :  203 / 347 frames ( 58.5%)  █████████████████████████████
+  Malignant (suspicious) :   32 / 347 frames (  9.2%)  ████
+                Normal :  112 / 347 frames ( 32.3%)  ████████████████
+
+MODEL MEAN CONFIDENCE
+---------------------
+  (For each frame, the model gives a confidence %
+   for each category. Below: the mean over all frames, as well as min/max values.)
+                Benign :  50.2%  [min 7.9% — max 90.9%]
+  Malignant (suspicious) :  16.7%  [min 2.8% — max 81.5%]
+                Normal :  33.1%  [min 1.8% — max 89.0%]
+
+⚠  SUSPICIOUS FRAMES (malignancy)
+----------------------------------
+  Frames classified as MALIGNANT (dominant category):
+    → frame_038.png  (malignant confidence: 48.4%)
+    → frame_039.png  (malignant confidence: 48.1%)
+    → frame_041.png  (malignant confidence: 50.4%)
+    → frame_050.png  (malignant confidence: 58.2%)
+    → frame_051.png  (malignant confidence: 81.5%)
+    → frame_052.png  (malignant confidence: 49.7%)
+    → frame_054.png  (malignant confidence: 49.8%)
+    → frame_055.png  (malignant confidence: 54.8%)
+    → frame_057.png  (malignant confidence: 59.2%)
+    → frame_058.png  (malignant confidence: 48.1%)
+    → frame_060.png  (malignant confidence: 51.5%)
+    → frame_062.png  (malignant confidence: 46.2%)
+    → frame_063.png  (malignant confidence: 42.7%)
+    → frame_065.png  (malignant confidence: 45.0%)
+    → frame_066.png  (malignant confidence: 59.4%)
+    → frame_067.png  (malignant confidence: 44.1%)
+    → frame_070.png  (malignant confidence: 48.4%)
+    → frame_071.png  (malignant confidence: 53.4%)
+    → frame_072.png  (malignant confidence: 43.1%)
+    → frame_073.png  (malignant confidence: 36.6%)
+    → frame_074.png  (malignant confidence: 49.0%)
+    → frame_075.png  (malignant confidence: 51.9%)
+    → frame_076.png  (malignant confidence: 54.4%)
+    → frame_077.png  (malignant confidence: 59.4%)
+    → frame_078.png  (malignant confidence: 50.2%)
+    → frame_082.png  (malignant confidence: 41.5%)
+    → frame_084.png  (malignant confidence: 45.2%)
+    → frame_086.png  (malignant confidence: 42.4%)
+    → frame_090.png  (malignant confidence: 48.6%)
+    → frame_092.png  (malignant confidence: 45.0%)
+    → frame_093.png  (malignant confidence: 46.5%)
+    → frame_148.png  (malignant confidence: 35.6%)
+  Frames with malignant score ≥ 30% (not dominant but notable):
+    → frame_000.png  (malignant confidence: 30.2%)
+    → frame_007.png  (malignant confidence: 32.0%)
+    → frame_008.png  (malignant confidence: 35.9%)
+    → frame_009.png  (malignant confidence: 38.7%)
+    → frame_010.png  (malignant confidence: 44.2%)
+    → frame_013.png  (malignant confidence: 38.9%)
+    → frame_034.png  (malignant confidence: 39.7%)
+    → frame_035.png  (malignant confidence: 33.8%)
+    → frame_036.png  (malignant confidence: 39.5%)
+    → frame_037.png  (malignant confidence: 45.0%)
+    → frame_040.png  (malignant confidence: 43.2%)
+    → frame_042.png  (malignant confidence: 34.0%)
+    → frame_043.png  (malignant confidence: 43.0%)
+    → frame_044.png  (malignant confidence: 36.3%)
+    → frame_045.png  (malignant confidence: 39.7%)
+    → frame_049.png  (malignant confidence: 42.9%)
+    → frame_053.png  (malignant confidence: 35.6%)
+    → frame_056.png  (malignant confidence: 38.9%)
+    → frame_061.png  (malignant confidence: 43.1%)
+    → frame_064.png  (malignant confidence: 40.3%)
+    → frame_068.png  (malignant confidence: 40.8%)
+    → frame_069.png  (malignant confidence: 33.6%)
+    → frame_079.png  (malignant confidence: 44.3%)
+    → frame_080.png  (malignant confidence: 32.3%)
+    → frame_081.png  (malignant confidence: 39.5%)
+    → frame_083.png  (malignant confidence: 37.5%)
+    → frame_085.png  (malignant confidence: 40.3%)
+    → frame_087.png  (malignant confidence: 42.5%)
+    → frame_089.png  (malignant confidence: 39.6%)
+    → frame_091.png  (malignant confidence: 44.3%)
+    → frame_096.png  (malignant confidence: 34.9%)
+    → frame_097.png  (malignant confidence: 34.0%)
+
+GENERAL ASSESSMENT (automatic heuristic)
+----------------------------------------
+  Method: the model may misclassify an isolated frame.
+  In ultrasound, a true lesion appears on several consecutive
+  frames as the probe sweeps a continuous area. Thus, a sequence
+  of ≥ 3 consecutive malignant frames is considered significant, while
+  isolated malignant frames are likely model misclassifications.
+
+  ⚠  RESULT: TO CHECK
+  3 sequence(s) of consecutive malignant frames detected:
+    → frames 050 to 052  (3 consecutive frames)
+    → frames 065 to 067  (3 consecutive frames)
+    → frames 070 to 078  (9 consecutive frames)
+
+════════════════════════════════════════════════════════════
+  This result is provided for information only.
+  It does not replace a radiologist's opinion in any way.
+════════════════════════════════════════════════════════════

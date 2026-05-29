@@ -1,0 +1,52 @@
+════════════════════════════════════════════════════════════
+  1_RAP  —  Right breast — Areolar / Periareolar
+  346 frames analyzed
+════════════════════════════════════════════════════════════
+
+SUMMARY
+------
+The model analyzed each frame of this acquisition and
+assigned a confidence score for 3 categories:
+  • Benign    = non-cancerous appearance
+  • Malignant = suspicious/cancerous appearance
+  • Normal    = no visible abnormality
+
+RESULT BY CATEGORY
+------------------
+                Benign :  272 / 346 frames ( 78.6%)  ███████████████████████████████████████
+  Malignant (suspicious) :    2 / 346 frames (  0.6%)  
+                Normal :   72 / 346 frames ( 20.8%)  ██████████
+
+MODEL MEAN CONFIDENCE
+---------------------
+  (For each frame, the model gives a confidence %
+   for each category. Below: the mean over all frames, as well as min/max values.)
+                Benign :  61.6%  [min 10.7% — max 96.2%]
+  Malignant (suspicious) :  10.3%  [min 1.1% — max 60.1%]
+                Normal :  28.1%  [min 2.3% — max 86.6%]
+
+⚠  SUSPICIOUS FRAMES (malignancy)
+----------------------------------
+  Frames classified as MALIGNANT (dominant category):
+    → frame_113.png  (malignant confidence: 37.2%)
+    → frame_299.png  (malignant confidence: 60.1%)
+  Frames with malignant score ≥ 30% (not dominant but notable):
+    → frame_111.png  (malignant confidence: 37.5%)
+    → frame_155.png  (malignant confidence: 31.6%)
+
+GENERAL ASSESSMENT (automatic heuristic)
+----------------------------------------
+  Method: the model may misclassify an isolated frame.
+  In ultrasound, a true lesion appears on several consecutive
+  frames as the probe sweeps a continuous area. Thus, a sequence
+  of ≥ 3 consecutive malignant frames is considered significant, while
+  isolated malignant frames are likely model misclassifications.
+
+  ✓  RESULT: OVERALL REASSURING
+  2 frame(s) classified as malignant but isolated,
+  without a consecutive sequence ≥ 3 — likely model outliers.
+
+════════════════════════════════════════════════════════════
+  This result is provided for information only.
+  It does not replace a radiologist's opinion in any way.
+════════════════════════════════════════════════════════════
