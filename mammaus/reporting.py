@@ -77,7 +77,10 @@ def find_consecutive_malignant_runs(scores: dict, min_run: int = DEFAULT_MIN_RUN
     return runs
 
 
-def generate_global_text_report(all_stats: dict, results_dir: Path, n_acq: int, n_frames: int, min_run: int = DEFAULT_MIN_RUN) -> None:
+def generate_global_text_report(
+    all_stats: dict, results_dir: Path, n_acq: int, n_frames: int,
+    min_run: int = DEFAULT_MIN_RUN,
+) -> None:
     """Generate and save a global text report summarizing all acquisitions."""
     n_to_check = sum(1 for s in all_stats.values() if s["to_check"])
     reassuring = n_to_check == 0
@@ -240,7 +243,10 @@ def make_acquisition_figure(acq_name: str, scores: dict, out_dir: Path, threshol
     plt.close(fig)
     return fig_path
 
-def print_acquisition_report(acq_name: str, scores: dict, out_dir: Path, threshold: float = DEFAULT_MALIGNANT_THRESHOLD, min_run: int = DEFAULT_MIN_RUN) -> None:
+def print_acquisition_report(
+    acq_name: str, scores: dict, out_dir: Path,
+    threshold: float = DEFAULT_MALIGNANT_THRESHOLD, min_run: int = DEFAULT_MIN_RUN,
+) -> None:
     """Generate and save a detailed text report for a single acquisition."""
     n_frames = len(scores["benign"])
     benign = np.array(scores["benign"])
@@ -441,8 +447,14 @@ def report_global_cli() -> None:
 
     parser = argparse.ArgumentParser(description="Generate global multi-acquisition report")
     parser.add_argument("--results", default="results", help="Results folder (default: results)")
-    parser.add_argument("--min-run", type=int, default=DEFAULT_MIN_RUN, help=f"Min consecutive malignant frames for alert (default: {DEFAULT_MIN_RUN})")
-    parser.add_argument("--threshold", type=float, default=DEFAULT_MALIGNANT_THRESHOLD, help=f"Malignant confidence threshold in %% (default: {DEFAULT_MALIGNANT_THRESHOLD})")
+    parser.add_argument(
+        "--min-run", type=int, default=DEFAULT_MIN_RUN,
+        help=f"Min consecutive malignant frames for alert (default: {DEFAULT_MIN_RUN})",
+    )
+    parser.add_argument(
+        "--threshold", type=float, default=DEFAULT_MALIGNANT_THRESHOLD,
+        help=f"Malignant confidence threshold in %% (default: {DEFAULT_MALIGNANT_THRESHOLD})",
+    )
     parser.add_argument("--verbose", action="store_true", help="Enable detailed logging")
     args = parser.parse_args()
 
