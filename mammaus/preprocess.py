@@ -127,10 +127,16 @@ def preprocess_cli() -> None:  # pragma: no cover
     Excluded from coverage: orchestration over real DICOM I/O.
     """
     import argparse
+
+    from mammaus.constants import setup_logging
+
     parser = argparse.ArgumentParser(description="DICOM preprocessing → PNG (ultrasound video frame extraction)")
     parser.add_argument("input_path", help="Folder or DICOM file to process")
     parser.add_argument("--output", default="preprocessed", help="Output folder (default: preprocessed)")
+    parser.add_argument("--verbose", action="store_true", help="Enable detailed logging")
     args = parser.parse_args()
+
+    setup_logging(args.verbose)
     dcm_files = find_dicom_files(args.input_path)
     if not dcm_files:
         print(f"No DICOM file found in: {args.input_path}")

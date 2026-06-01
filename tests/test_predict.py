@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from mammaus.constants import MODEL_ID
+from mammaus.constants import DEFAULT_MALIGNANT_THRESHOLD, DEFAULT_MIN_RUN, MODEL_ID
 from mammaus.predict import predict_cli
 
 
@@ -93,3 +93,31 @@ class TestPredictCli:
 class TestModelId:
     def test_model_id_is_set(self):
         assert MODEL_ID == "hugging-science/breast-cancer-detector-2"
+
+    def test_default_constants(self):
+        assert DEFAULT_MIN_RUN == 3
+        assert DEFAULT_MALIGNANT_THRESHOLD == 30.0
+
+
+class TestPredictCliCustomParams:
+    @patch("mammaus.predict.pipeline")
+    def test_custom_model_and_thresholds(self, mock_pipeline, fake_images, tmp_path):
+        """CLI accepts --model, --threshold, --min-run, --verbose."""
+        mock_pipeline.return_value = _make_mock_classifier()
+        output_dir = tmp_path / "results_custom"
+
+        with patch(
+            "sys.argv",
+            [
+                "predict_cli", str(fake_images),
+                "--output", str(output_dir),
+                "--model", "some-org/some-model",
+                "--threshold", "20",
+                "--min-run", "5",
+                "--verbose",
+            ],
+        ):
+            predict_cli()
+
+        mock_pipeline.assert_called_once_with("image-classification", model="some-org/some-model")
+        assert (output_dir / "scores").exists()
