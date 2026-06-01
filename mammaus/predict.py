@@ -28,8 +28,14 @@ def predict_cli() -> None:
     parser.add_argument("input_path", help="Folder containing preprocessed PNGs")
     parser.add_argument("--output", default="results", help="Output folder (default: results)")
     parser.add_argument("--model", default=MODEL_ID, help=f"HuggingFace model ID (default: {MODEL_ID})")
-    parser.add_argument("--min-run", type=int, default=DEFAULT_MIN_RUN, help=f"Min consecutive malignant frames for alert (default: {DEFAULT_MIN_RUN})")
-    parser.add_argument("--threshold", type=float, default=DEFAULT_MALIGNANT_THRESHOLD, help=f"Malignant confidence threshold in %% (default: {DEFAULT_MALIGNANT_THRESHOLD})")
+    parser.add_argument(
+        "--min-run", type=int, default=DEFAULT_MIN_RUN,
+        help=f"Min consecutive malignant frames for alert (default: {DEFAULT_MIN_RUN})",
+    )
+    parser.add_argument(
+        "--threshold", type=float, default=DEFAULT_MALIGNANT_THRESHOLD,
+        help=f"Malignant confidence threshold in %% (default: {DEFAULT_MALIGNANT_THRESHOLD})",
+    )
     parser.add_argument("--verbose", action="store_true", help="Enable detailed logging")
     args = parser.parse_args()
 
