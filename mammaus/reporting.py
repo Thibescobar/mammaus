@@ -1,5 +1,6 @@
 """Clinical reporting: figures, statistics, and text reports."""
 
+import logging
 from pathlib import Path
 
 import matplotlib
@@ -9,7 +10,15 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-from mammaus.constants import LABEL_COLORS, LABEL_EN, SERIES_NAMES_EN
+from mammaus.constants import (
+    DEFAULT_MALIGNANT_THRESHOLD,
+    DEFAULT_MIN_RUN,
+    LABEL_COLORS,
+    LABEL_EN,
+    SERIES_NAMES_EN,
+)
+
+logger = logging.getLogger(__name__)
 
 
 def series_display_name(acq_name: str) -> str:
@@ -19,7 +28,7 @@ def series_display_name(acq_name: str) -> str:
     en_name = SERIES_NAMES_EN.get(code, code)
     return f"{acq_name}  —  {en_name}"
 
-def find_malignant_frames(scores: dict, threshold: float = 30.0) -> tuple[list, list]:
+def find_malignant_frames(scores: dict, threshold: float = DEFAULT_MALIGNANT_THRESHOLD) -> tuple[list, list]:
     """Identify frames with a significant malignant score.
 
     Returns:
@@ -38,7 +47,7 @@ def find_malignant_frames(scores: dict, threshold: float = 30.0) -> tuple[list, 
             suspect_frames.append((i, malignant[i]))
     return top1_frames, suspect_frames
 
-def find_consecutive_malignant_runs(scores: dict, min_run: int = 3) -> list[tuple[int, int, int]]:
+def find_consecutive_malignant_runs(scores: dict, min_run: int = DEFAULT_MIN_RUN) -> list[tuple[int, int, int]]:
     """Find runs of consecutive frames classified as malignant (top-1).
 
     Returns:
@@ -68,7 +77,7 @@ def find_consecutive_malignant_runs(scores: dict, min_run: int = 3) -> list[tupl
     return runs
 
 
-def generate_global_text_report(all_stats: dict, results_dir: Path, n_acq: int, n_frames: int) -> None:
+def generate_global_text_report(all_stats: dict, results_dir: Path, n_acq: int, n_frames: int, min_run: int = DEFAULT_MIN_RUN) -> None:
     """Generate and save a global text report summarizing all acquisitions."""
     n_to_check = sum(1 for s in all_stats.values() if s["to_check"])
     reassuring = n_to_check == 0
@@ -89,7 +98,7 @@ def generate_global_text_report(all_stats: dict, results_dir: Path, n_acq: int, 
     else:
         summary.append(
             f"Of the {n_acq} acquisitions, {n_to_check} showed at least"
-            f" one sequence of ≥3 consecutive frames classified as"
+            f" one sequence of \u2265{min_run} consecutive frames classified as"
             f" malignant, which may warrant further review. The overall"
             f" proportion of frames classified as malignant is"
             f" {malignant_pct:.1f}%. Most acquisitions remain predominantly"
@@ -157,7 +166,7 @@ def generate_global_text_report(all_stats: dict, results_dir: Path, n_acq: int, 
     print(f"Global text report saved: {report_path}")
 
 
-def compute_stats(scores: dict, min_run: int = 3) -> dict:
+def compute_stats(scores: dict, min_run: int = DEFAULT_MIN_RUN) -> dict:
     """Compute statistics for a given acquisition's scores."""
     benign, malignant, normal = scores["benign"], scores["malignant"], scores["normal"]
     n = len(benign)
@@ -179,11 +188,11 @@ def compute_stats(scores: dict, min_run: int = 3) -> dict:
         "to_check": len(runs) > 0,
     }
 
-def make_acquisition_figure(acq_name: str, scores: dict, out_dir: Path):
+def make_acquisition_figure(acq_name: str, scores: dict, out_dir: Path, threshold: float = DEFAULT_MALIGNANT_THRESHOLD):
     """Generate and save a per-acquisition confidence plot with color bar."""
     n_frames = len(scores["benign"])
     frames = np.arange(n_frames)
-    malignant_top1, malignant_suspect = find_malignant_frames(scores)
+    malignant_top1, malignant_suspect = find_malignant_frames(scores, threshold=threshold)
     fig, axes = plt.subplots(2, 1, figsize=(14, 7), gridspec_kw={"height_ratios": [3, 1]})
     display_name = series_display_name(acq_name)
     fig.suptitle(display_name, fontsize=13, fontweight="bold")
@@ -203,7 +212,7 @@ def make_acquisition_figure(acq_name: str, scores: dict, out_dir: Path):
         ax.scatter(
             idx, vals, color="#e74c3c", s=30, zorder=4, marker="o",
             facecolors="none", linewidths=1.5,
-            label=f"Malignant ≥30% ({len(idx)} frames)",
+            label=f"Malignant ≥{threshold:.0f}% ({len(idx)} frames)",
         )
     ax.set_ylabel("Model confidence (%)")
     ax.set_xlabel("Frame number")
@@ -231,19 +240,20 @@ def make_acquisition_figure(acq_name: str, scores: dict, out_dir: Path):
     plt.close(fig)
     return fig_path
 
-def print_acquisition_report(acq_name: str, scores: dict, out_dir: Path) -> None:
+def print_acquisition_report(acq_name: str, scores: dict, out_dir: Path, threshold: float = DEFAULT_MALIGNANT_THRESHOLD, min_run: int = DEFAULT_MIN_RUN) -> None:
     """Generate and save a detailed text report for a single acquisition."""
     n_frames = len(scores["benign"])
     benign = np.array(scores["benign"])
     malignant = np.array(scores["malignant"])
     normal = np.array(scores["normal"])
     display_name = series_display_name(acq_name)
+    logger.debug("Generating report for %s (%d frames)", acq_name, n_frames)
     top_per_frame = []
     for i in range(n_frames):
         frame_scores = {"benign": benign[i], "malignant": malignant[i], "normal": normal[i]}
         top_per_frame.append(max(frame_scores, key=frame_scores.get))
     counts = {lbl: top_per_frame.count(lbl) for lbl in ("benign", "malignant", "normal")}
-    malignant_top1, malignant_suspect = find_malignant_frames(scores)
+    malignant_top1, malignant_suspect = find_malignant_frames(scores, threshold=threshold)
     lines = []
     lines.append(f"{'═'*60}")
     lines.append(f"  {display_name}")
@@ -290,19 +300,19 @@ def print_acquisition_report(acq_name: str, scores: dict, out_dir: Path) -> None
             for frame_idx, score in malignant_top1:
                 lines.append(f"    → frame_{frame_idx:03d}.png  (malignant confidence: {score:.1f}%)")
         if malignant_suspect:
-            lines.append("  Frames with malignant score ≥ 30% (not dominant but notable):")
+            lines.append(f"  Frames with malignant score ≥ {threshold:.0f}% (not dominant but notable):")
             for frame_idx, score in malignant_suspect:
                 lines.append(f"    → frame_{frame_idx:03d}.png  (malignant confidence: {score:.1f}%)")
     else:
         lines.append("✓  No suspicious malignant frame detected.")
-    consecutive_runs = find_consecutive_malignant_runs(scores, min_run=3)
+    consecutive_runs = find_consecutive_malignant_runs(scores, min_run=min_run)
     lines.append("")
     lines.append("GENERAL ASSESSMENT (automatic heuristic)")
     lines.append("----------------------------------------")
     lines.append("  Method: the model may misclassify an isolated frame.")
     lines.append("  In ultrasound, a true lesion appears on several consecutive")
     lines.append("  frames as the probe sweeps a continuous area. Thus, a sequence")
-    lines.append("  of ≥ 3 consecutive malignant frames is considered significant, while")
+    lines.append(f"  of ≥ {min_run} consecutive malignant frames is considered significant, while")
     lines.append("  isolated malignant frames are likely model misclassifications.")
     lines.append("")
     if consecutive_runs:
@@ -314,7 +324,7 @@ def print_acquisition_report(acq_name: str, scores: dict, out_dir: Path) -> None
         lines.append("  ✓  RESULT: OVERALL REASSURING")
         if malignant_top1:
             lines.append(f"  {len(malignant_top1)} frame(s) classified as malignant but isolated,")
-            lines.append("  without a consecutive sequence ≥ 3 — likely model outliers.")
+            lines.append(f"  without a consecutive sequence ≥ {min_run} — likely model outliers.")
         else:
             lines.append("  No frame classified as malignant.")
     lines.append("")
@@ -328,7 +338,7 @@ def print_acquisition_report(acq_name: str, scores: dict, out_dir: Path) -> None
     print(f"  Report saved: {report_path}")
 
 
-def make_global_figure(all_data: dict, all_stats: dict, out_dir: Path):
+def make_global_figure(all_data: dict, all_stats: dict, out_dir: Path, threshold: float = DEFAULT_MALIGNANT_THRESHOLD):
     """Generate and save a global summary figure (bar charts + table)."""
     acq_names = list(all_data.keys())
     n_acq = len(acq_names)
@@ -364,7 +374,7 @@ def make_global_figure(all_data: dict, all_stats: dict, out_dir: Path):
     ax2.set_ylabel("Malignant score (%)")
     ax2.set_title("Malignancy score per acquisition", fontsize=11, fontweight="bold")
     ax2.legend(fontsize=8)
-    ax2.axhline(y=30, color="orange", linestyle="--", alpha=0.7, label="30% threshold")
+    ax2.axhline(y=threshold, color="orange", linestyle="--", alpha=0.7, label=f"{threshold:.0f}% threshold")
     ax2.set_ylim(0, max(maxes) * 1.15 if maxes else 100)
     ax3 = fig.add_subplot(gs[1, :])
     ax3.axis("off")
@@ -427,9 +437,16 @@ def report_global_cli() -> None:
     import sys
     from pathlib import Path
 
+    from mammaus.constants import setup_logging
+
     parser = argparse.ArgumentParser(description="Generate global multi-acquisition report")
     parser.add_argument("--results", default="results", help="Results folder (default: results)")
+    parser.add_argument("--min-run", type=int, default=DEFAULT_MIN_RUN, help=f"Min consecutive malignant frames for alert (default: {DEFAULT_MIN_RUN})")
+    parser.add_argument("--threshold", type=float, default=DEFAULT_MALIGNANT_THRESHOLD, help=f"Malignant confidence threshold in %% (default: {DEFAULT_MALIGNANT_THRESHOLD})")
+    parser.add_argument("--verbose", action="store_true", help="Enable detailed logging")
     args = parser.parse_args()
+
+    setup_logging(args.verbose)
 
     results_dir = Path(args.results)
     scores_dir = results_dir / "scores"
@@ -449,11 +466,12 @@ def report_global_cli() -> None:
         data = np.load(npz_path)
         scores = {k: data[k] for k in ("benign", "malignant", "normal")}
         all_data[acq_name] = scores
-        all_stats[acq_name] = compute_stats(scores)
+        all_stats[acq_name] = compute_stats(scores, min_run=args.min_run)
 
     n_acq = len(all_data)
     n_frames = sum(s["n_frames"] for s in all_stats.values())
 
-    generate_global_text_report(all_stats, results_dir, n_acq, n_frames)
-    fig_path = make_global_figure(all_data, all_stats, results_dir)
+    logger.debug("Generating global report: %d acquisitions, %d frames", n_acq, n_frames)
+    generate_global_text_report(all_stats, results_dir, n_acq, n_frames, min_run=args.min_run)
+    fig_path = make_global_figure(all_data, all_stats, results_dir, threshold=args.threshold)
     print(f"Global figure saved: {fig_path}")
