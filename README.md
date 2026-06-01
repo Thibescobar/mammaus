@@ -4,8 +4,8 @@
 
 ![Python](https://img.shields.io/badge/python-≥3.10-blue)
 ![License](https://img.shields.io/badge/license-Apache%202.0-green)
-![Tests](https://img.shields.io/badge/tests-36%20passed-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-91%25-brightgreen)
+![Tests](https://img.shields.io/badge/tests-40%20passed-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 ![Linting](https://img.shields.io/badge/linting-ruff-purple)
 
 
@@ -37,7 +37,6 @@ mammaus/              # Core package
     MODEL.txt         # Model card (architecture, classes, limitations)
 tests/                # Unit tests (pytest)
 pyproject.toml        # Build config, entry points, dev tools
-requirements.txt
 README.md
 ```
 
@@ -69,16 +68,18 @@ Pipeline Overview:
 
 
 ## Installation
-Clone the project, then
+**1. Install PyTorch** following the official instructions for your system (CPU or GPU):
+👉 https://pytorch.org/get-started/locally/
+
+**2. Install mammaus:**
 ```bash
 cd mammaus
-pip install -e ".[dev]"
+pip install -e .
 ```
 
-`[dev]` includes testing and linting tools (`pytest`, `ruff`).
-For usage only, classical installation is sufficient.
+For development (testing + linting):
 ```bash
-pip install -e .
+pip install -e ".[dev]"
 ```
 
 
@@ -96,6 +97,24 @@ mammaus-predict preprocessed/
 ### 3. Global Report
 ```bash
 mammaus-report
+```
+
+### Advanced Options
+All CLI commands support additional parameters:
+
+| Option | Command(s) | Default | Description |
+|---|---|---|---|
+| `--verbose` | all | off | Enable detailed logging |
+| `--model MODEL_ID` | `mammaus-predict` | `hugging-science/breast-cancer-detector-2` | HuggingFace model ID or local path |
+| `--threshold PCT` | `mammaus-predict`, `mammaus-report` | `30.0` | Malignant confidence threshold (%) |
+| `--min-run N` | `mammaus-predict`, `mammaus-report` | `3` | Min consecutive malignant frames for alert |
+| `--output DIR` | `mammaus-preprocess`, `mammaus-predict` | `preprocessed` / `results` | Output folder |
+| `--results DIR` | `mammaus-report` | `results` | Results folder to read scores from |
+
+Example with custom parameters:
+```bash
+mammaus-predict preprocessed/ --model my-org/my-model --threshold 20 --min-run 5 --verbose
+mammaus-report --threshold 20 --min-run 5
 ```
 
 
@@ -158,8 +177,12 @@ python -m pytest tests/ -v
 
 ## Adapting to Other Applications
 This pipeline is model-agnostic. To adapt it to a different classification task:
-1. Update `constants.py`: change `MODEL_ID`, `LABELS`, `LABEL_COLORS`, and `LABEL_EN` to match the new model and classes
-2. Update `MODEL.txt` with the new model card
+1. Use `--model` to point to a different HuggingFace image classification model
+2. Adjust `--threshold` and `--min-run` as needed for the new domain
+
+> **Note:** The model must be compatible with `transformers.pipeline("image-classification", ...)`.
+> This means a HuggingFace Hub ID or a local directory saved with `save_pretrained()`.
+> Raw `.pt`, ONNX, or other formats are not supported directly for the moment.
 
 
 ## Provided Example: Breast Ultrasound
@@ -178,8 +201,6 @@ Thibault Escobar, 2026
 
 ## Limitations and Future Improvements
 
-- **Parameterization**: The threshold for consecutive malignant frames (default: 3), the malignant confidence threshold (default: 30%), and the model are hard-coded. Making these parameters configurable via CLI would improve flexibility.
-- **Error Handling**: While the code handles missing files and format issues, more detailed logging and exception management would help for production use.
 - **Performance**: For very large datasets, parallelization of preprocessing and prediction could be considered. Easy to implement if needed with dedicated lib such as Ray or Joblib.
 
 If you have suggestions or want to contribute improvements, feel free to open an issue or pull request.

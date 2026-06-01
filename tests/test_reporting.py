@@ -163,7 +163,7 @@ class TestGenerateGlobalTextReport:
         stats = compute_stats(_sample_scores())
         all_stats = {"test_acq": stats}
         generate_global_text_report(all_stats, tmp_path, n_acq=1, n_frames=10)
-        report = (tmp_path / "global_report.txt").read_text()
+        report = (tmp_path / "global_report.txt").read_text(encoding="utf-8")
         assert "GLOBAL REPORT" in report
         assert "reassuring" in report.lower()
         assert "test_acq" in report
@@ -172,7 +172,7 @@ class TestGenerateGlobalTextReport:
         stats = compute_stats(_sample_scores_malignant())
         all_stats = {"acq_mal": stats}
         generate_global_text_report(all_stats, tmp_path, n_acq=1, n_frames=5)
-        report = (tmp_path / "global_report.txt").read_text()
+        report = (tmp_path / "global_report.txt").read_text(encoding="utf-8")
         assert "TO CHECK" in report
         assert "require review" in report
 
@@ -183,16 +183,23 @@ class TestPrintAcquisitionReport:
         print_acquisition_report("1_RAP", scores, tmp_path)
         report_path = tmp_path / "1_RAP_report.txt"
         assert report_path.exists()
-        text = report_path.read_text()
+        text = report_path.read_text(encoding="utf-8")
         assert "RESULT BY CATEGORY" in text
         assert "OVERALL REASSURING" in text
 
     def test_report_with_malignant_frames(self, tmp_path):
         scores = _sample_scores_malignant()
         print_acquisition_report("1_TEST", scores, tmp_path)
-        text = (tmp_path / "1_TEST_report.txt").read_text()
+        text = (tmp_path / "1_TEST_report.txt").read_text(encoding="utf-8")
         assert "TO CHECK" in text
         assert "SUSPICIOUS FRAMES" in text
+
+    def test_custom_threshold_and_min_run(self, tmp_path):
+        scores = _sample_scores_malignant()
+        print_acquisition_report("1_CUSTOM", scores, tmp_path, threshold=50.0, min_run=5)
+        text = (tmp_path / "1_CUSTOM_report.txt").read_text(encoding="utf-8")
+        assert "≥ 5" in text
+        assert "≥ 50%" in text or "OVERALL REASSURING" in text
 
 
 class TestMakeAcquisitionFigure:
@@ -206,6 +213,11 @@ class TestMakeAcquisitionFigure:
     def test_with_malignant_data(self, tmp_path):
         scores = _sample_scores_malignant()
         fig_path = make_acquisition_figure("1_MAL", scores, tmp_path)
+        assert fig_path.exists()
+
+    def test_custom_threshold(self, tmp_path):
+        scores = _sample_scores_malignant()
+        fig_path = make_acquisition_figure("1_THR", scores, tmp_path, threshold=50.0)
         assert fig_path.exists()
 
 

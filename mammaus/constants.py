@@ -1,6 +1,19 @@
 # Common constants and mappings for mammaus
 
+import logging
+
 MODEL_ID = "hugging-science/breast-cancer-detector-2"
+DEFAULT_MIN_RUN = 3
+DEFAULT_MALIGNANT_THRESHOLD = 30.0
+
+
+def setup_logging(verbose: bool = False) -> None:
+    """Configure logging for the mammaus CLI."""
+    level = logging.DEBUG if verbose else logging.WARNING
+    logging.basicConfig(
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        level=level,
+    )
 
 LABELS = {
     "0": "benign",
